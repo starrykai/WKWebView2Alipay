@@ -7,8 +7,8 @@
 //
 
 #import "ViewController.h"
-
-@interface ViewController ()
+#import <WebKit/WebKit.h>
+@interface ViewController () <WKNavigationDelegate>
 
 @end
 
@@ -17,6 +17,35 @@
 - (void)viewDidLoad {
     [super viewDidLoad];
     // Do any additional setup after loading the view, typically from a nib.
+    
+    WKWebView *webView = [[WKWebView alloc] initWithFrame:self.view.bounds];
+    [webView loadRequest:[NSURLRequest requestWithURL:[NSURL URLWithString:@"https://ur.alipay.com/4rwQ"]]];
+    webView.navigationDelegate = self;
+    [self.view addSubview:webView];
+    
+}
+
+- (void)webView:(WKWebView *)webView decidePolicyForNavigationAction:(WKNavigationAction *)navigationAction decisionHandler:(void (^)(WKNavigationActionPolicy))decisionHandler {
+    
+    UIApplication *app = [UIApplication sharedApplication];
+    NSURL         *url = navigationAction.request.URL;
+
+    NSString *alipayUrl = @"alipays://";
+    NSString *alipayAppStoreUrl = @"itms-apps://";
+    
+    if ([url.absoluteString hasPrefix:alipayUrl] || [url.absoluteString hasPrefix:alipayAppStoreUrl]) {
+        
+        if ([app canOpenURL:url]) {
+            [app openURL:url options:@{UIApplicationOpenURLOptionUniversalLinksOnly: @NO} completionHandler:^(BOOL success) {
+              
+            }];
+        }
+        decisionHandler(WKNavigationActionPolicyCancel);
+        return;
+        
+    } else {
+        decisionHandler(WKNavigationActionPolicyAllow);
+    }
 }
 
 
