@@ -1,6 +1,6 @@
-# WKWebView调用支付宝查违章功能Demo
+# WKWebView调用url跳转到其他AppDemo
 
-
+demo通过WKWebView加载支付宝查违章的url跳转到支付宝中的查违章功能
 
 ## 流程
 
